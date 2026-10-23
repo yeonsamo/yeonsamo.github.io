@@ -663,4 +663,39 @@
     });
     document.getElementById('reviews').hidden = false;
   }
+
+  // 5초 브랜드 범퍼 모션 그래픽 재생 및 닫기 제어
+  var bumperIntro = document.getElementById('bumper-intro');
+  var replayBumperBtn = document.getElementById('replay-bumper-btn');
+  var skipBumperBtn = document.getElementById('bumper-skip-btn');
+  var bumperTimer = null;
+
+  function stopBumper() {
+    if (!bumperIntro) return;
+    clearTimeout(bumperTimer);
+    bumperIntro.classList.remove('is-playing');
+    bumperIntro.hidden = true;
+  }
+
+  function playBumper() {
+    if (!bumperIntro) return;
+    clearTimeout(bumperTimer);
+    bumperIntro.hidden = false;
+    bumperIntro.classList.remove('is-playing');
+    void bumperIntro.offsetWidth; // 키프레임 재시작 리플로우
+    bumperIntro.classList.add('is-playing');
+    bumperTimer = setTimeout(stopBumper, 5000);
+  }
+
+  if (replayBumperBtn) {
+    replayBumperBtn.addEventListener('click', playBumper);
+  }
+  if (skipBumperBtn) {
+    skipBumperBtn.addEventListener('click', stopBumper);
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && bumperIntro && !bumperIntro.hidden) {
+      stopBumper();
+    }
+  });
 })();
