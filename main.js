@@ -1,4 +1,4 @@
-// 스크롤 등장 효과, 실시간 야간 코트 예보(기온·강수·풍속), NTRP 자가 점검 연동, 맞춤형 문의 양식 자동 생성기
+// 스크롤 등장 효과, 야간 코트 예보(기온·강수·풍속), NTRP 자가 점검 연동, 맞춤형 문의 양식 자동 생성기
 (function () {
   var config = window.CLUB_CONFIG || {};
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -339,18 +339,30 @@
 
   if (window.fetch) loadWeather(firstSession);
 
-  // NTRP 자가 점검: 고른 개수에 따라 안내 및 문의 양식 자동 연동
+  // NTRP 자가 점검: 고른 개수에 따라 안내·눈금 마커·문의 양식 자동 연동
   var checks = document.querySelectorAll('.self-check input');
   var checkResult = document.querySelector('.self-check-result');
   var checkCounter = document.getElementById('check-counter');
   var applyCheckBtn = document.getElementById('apply-check-btn');
   var ntrpSelect = document.getElementById('input-ntrp');
+  var ntrpMarker = document.getElementById('ntrp-marker');
 
   checks.forEach(function (box) {
     box.addEventListener('change', function () {
       var n = document.querySelectorAll('.self-check input:checked').length;
       var total = checks.length;
       if (checkCounter) checkCounter.textContent = n + ' / ' + total + ' 선택됨';
+
+      if (ntrpMarker) {
+        if (n === 0) {
+          ntrpMarker.hidden = true;
+        } else {
+          // 1개: 2.0~2.5 사이(8%), 2개: 2.5(16.67%), 3개: 2.5~3.0(26%), 4개: 3.0+(33.33%)
+          var posMap = { 1: '8.33%', 2: '16.67%', 3: '26%', 4: '33.33%' };
+          ntrpMarker.style.left = posMap[n] || '33.33%';
+          ntrpMarker.hidden = false;
+        }
+      }
 
       if (n === total) {
         checkResult.textContent = '✅ ' + total + '개 모두 해당 — NTRP 3.0 이상 기준에 잘 맞아요! 편하게 가입·게스트 문의를 남겨 주세요.';
@@ -553,6 +565,48 @@
       if (guestTab) activateTab(guestTab);
       var contactSec = document.getElementById('contact');
       if (contactSec) contactSec.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  // 다음 모임 캘린더(.ics) 일정 파일 다운로드
+  var addCalBtn = document.getElementById('add-calendar-btn');
+  if (addCalBtn) {
+    addCalBtn.addEventListener('click', function () {
+      var session = upcomingSessions[0] || firstSession;
+      if (!session) return;
+      var kst = session.kst;
+      var y = kst.getUTCFullYear();
+      var m = pad(kst.getUTCMonth() + 1);
+      var d = pad(kst.getUTCDate());
+      var dtStart = y + m + d + 'T190000';
+      var dtEnd = y + m + d + 'T220000';
+      var ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Yeonsamo Tennis Club//KO',
+        'BEGIN:VEVENT',
+        'SUMMARY:🎾 연사모 정기 모임 (연암공원 테니스장)',
+        'DTSTART;TZID=Asia/Seoul:' + dtStart,
+        'DTEND;TZID=Asia/Seoul:' + dtEnd,
+        'LOCATION:대구 북구 산격동 연암공원 테니스장',
+        'DESCRIPTION:연사모 화·금 야간 정기 모임 (19:00~22:00) · https://yeonsamo.github.io/',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+      try {
+        var blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'yeonsamo-' + y + m + d + '.ics';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        showToast('다음 모임 일정을 캘린더 파일(.ics)로 저장했어요.');
+      } catch (e) {
+        showToast('일정 저장을 지원하지 않는 브라우저입니다.');
+      }
     });
   }
 

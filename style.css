@@ -298,6 +298,33 @@ img { display: block; max-width: 100%; height: auto; }
 .hero-sub { color: rgba(255, 255, 255, 0.84); font-size: clamp(1rem, 2.3vw, 1.15rem); max-width: 38em; margin-bottom: 28px; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
+/* 코트 정체성 에디토리얼 티커 바 */
+.vibe-strip {
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: rgba(14, 31, 25, 0.55);
+  padding: 12px 0;
+  user-select: none;
+}
+.vibe-track {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  width: max-content;
+  white-space: nowrap;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: rgba(238, 243, 238, 0.72);
+  animation: marquee 32s linear infinite;
+}
+.vibe-dot { color: var(--ball); font-size: 0.55rem; opacity: 0.85; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 /* 공통 섹션 */
 .section { position: relative; padding: 76px 20px; max-width: 1120px; margin: 0 auto; }
 .eyebrow {
@@ -384,6 +411,57 @@ img { display: block; max-width: 100%; height: auto; }
   font-variant-numeric: tabular-nums;
 }
 .flow-card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+/* 연사모 코트 문화 & 에티켓 (Bento Grid) */
+.etiquette-wrap {
+  margin-top: 28px;
+  padding: 24px 20px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(212, 239, 58, 0.22);
+  background:
+    radial-gradient(ellipse 65% 50% at 0% 0%, rgba(212, 239, 58, 0.07), transparent 70%),
+    rgba(14, 31, 25, 0.65);
+}
+.etiquette-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-bottom: 16px;
+}
+.etiquette-head h3 { margin: 0; font-size: 1.12rem; }
+.etiquette-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(212, 239, 58, 0.15);
+  border: 1px solid rgba(212, 239, 58, 0.35);
+  color: var(--ball);
+}
+.etiquette-grid {
+  display: grid;
+  gap: 12px;
+}
+.etiquette-card {
+  position: relative;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(8, 19, 15, 0.55);
+  display: grid;
+  gap: 4px;
+}
+.etiquette-num {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: var(--ball);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+.etiquette-card strong { font-size: 0.98rem; color: #fff; }
+.etiquette-card p { margin: 0; font-size: 0.88rem; color: var(--muted); }
 
 /* 운영 — 일주일 띠: 화·금 칸에만 조명이 켜짐 */
 .schedule-grid { display: grid; gap: 24px; margin-top: 32px; }
@@ -559,7 +637,13 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .info dt { color: var(--muted); font-size: 0.92rem; }
 .info dd { margin: 0; font-weight: 600; }
-.info-actions { border-top: 1px solid var(--line); padding-top: 16px; }
+.info-actions {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 
 /* 가입 기준 — NTRP 눈금 */
 .level { display: grid; gap: 28px; }
@@ -620,6 +704,21 @@ img { display: block; max-width: 100%; height: auto; }
   box-shadow: 0 0 18px var(--ball-glow);
   transform-origin: left center;
   transition: transform 1.2s var(--ease) 0.2s;
+}
+.ntrp-user-marker {
+  position: absolute;
+  top: 50%;
+  left: calc(100% / 3);
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--night);
+  box-shadow: 0 0 0 3px var(--ball), 0 0 14px var(--ball);
+  font-size: 0;
+  pointer-events: none;
+  transition: left 0.35s var(--ease);
 }
 .ntrp-ticks { list-style: none; padding: 0; margin: 0; position: relative; height: 44px; }
 .ntrp-ticks li {
@@ -873,9 +972,38 @@ img { display: block; max-width: 100%; height: auto; }
 
 .inquiry-template {
   padding: 18px;
-  border-radius: 14px;
+  border-radius: 16px;
   border: 1px dashed rgba(212, 239, 58, 0.35);
-  background: rgba(8, 19, 15, 0.55);
+  background: rgba(8, 19, 15, 0.62);
+}
+.pass-ribbon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px dashed var(--line);
+}
+.pass-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: rgba(212, 239, 58, 0.16);
+  color: var(--ball);
+}
+.pass-badge.is-guest {
+  background: rgba(74, 222, 128, 0.16);
+  color: #4ade80;
+}
+.pass-code {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 .template-header {
   display: flex;
@@ -1045,6 +1173,8 @@ img { display: block; max-width: 100%; height: auto; }
   .section { padding: 108px 40px; }
 
   .flow-cards { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .etiquette-wrap { padding: 28px 28px; }
+  .etiquette-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
 
   .schedule-grid { grid-template-columns: 1.25fr 1fr; gap: 28px 36px; align-items: stretch; }
   .schedule-grid .week { grid-column: 1 / -1; }
@@ -1074,6 +1204,6 @@ img { display: block; max-width: 100%; height: auto; }
   html { scroll-behavior: auto; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
   .js .ntrp:not(.is-in) .ntrp-fill { transform: none; }
-  .hero-glow, .live-status.is-live .live-dot { animation: none; }
-  .btn, .mobile-cta, .self-check label, .flow-card { transition: none; }
+  .hero-glow, .live-status.is-live .live-dot, .vibe-track { animation: none; }
+  .btn, .mobile-cta, .self-check label, .flow-card, .ntrp-user-marker { transition: none; }
 }
